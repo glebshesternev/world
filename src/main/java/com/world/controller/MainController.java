@@ -1,9 +1,11 @@
 package com.world.controller;
 
 
+import com.world.exception.PlanetAlreadyExists;
 import com.world.model.Planet;
 import com.world.model.Wizard;
 import com.world.service.MainService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +25,14 @@ public class MainController {
     }
 
     @PostMapping("planets")
-    public Planet addPlanet(@RequestBody Planet planet) {
-        return service.addPlanet(planet);
+    public ResponseEntity addPlanet(@RequestBody Planet planet) {
+        try {
+            service.addPlanet(planet);
+            return ResponseEntity.ok("Planet added");
+        }
+        catch (PlanetAlreadyExists e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping("wizards")

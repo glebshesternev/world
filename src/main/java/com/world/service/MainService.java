@@ -1,5 +1,6 @@
 package com.world.service;
 
+import com.world.exception.PlanetAlreadyExists;
 import com.world.model.Planet;
 import com.world.model.Wizard;
 import com.world.repository.PlanetRepo;
@@ -21,7 +22,10 @@ public class MainService {
         this.wizardRepo = wizardRepo;
     }
 
-    public Planet addPlanet(Planet planet) {
+    public Planet addPlanet(Planet planet) throws PlanetAlreadyExists {
+        List<Planet> test = planetRepo.findByName(planet.getName());
+        if (test.size() != 0)
+            throw new PlanetAlreadyExists("Planet already exist");
         return planetRepo.save(planet);
     }
 
